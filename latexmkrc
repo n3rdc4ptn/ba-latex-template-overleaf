@@ -1,0 +1,1 @@
+$ENV{'TEXINPUTS'}='./ba-latex-template//:' . $ENV{'TEXINPUTS'};

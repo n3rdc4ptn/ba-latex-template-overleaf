@@ -1,0 +1,36 @@
+\documentclass[first=firstname,last=lastname,company=comp,location=Dresden]{baarticle}
+\usepackage[english,main=ngerman]{babel}
+\usepackage[autostyle=true,german=quotes]{csquotes}
+\usepackage[style=baarticle]{biblatex}
+% Additional packages should probably go here
+\usepackage{hyperref}
+
+\addbibresource{document.bib}
+
+\begin{document}
+    \mktitle{
+        title=Keks Report,
+        img=./img/ba_dresden_logo.png,
+        course=science,
+        number=1234,
+        corrector={Andriy Luntovskyy,Christian Haeck},
+        themedate=\today,
+        returndate=\today
+    }
+    \mkblocknotice{
+        signature=./img/ba_dresden_logo.png,
+        date=\today,
+        location=Dresden
+    }
+    \mkfrontmatter{
+        \section*{Abkürzungsverzeichnis}
+        \addcontentsline{toc}{section}{Abkürzungsverzeichnis}
+    }
+    % Content here
+    \printbibliography[heading=bibintoc]
+    \clearpage
+    \mkaffirmation{
+        signature=./img/ba_dresden_logo.png,
+        date=\today
+    }
+\end{document}
