@@ -1,6 +1,6 @@
 % Document class implementing the BA Dresden Styleguide
 \NeedsTeXFormat{LaTeX2e}[1995/12/01]
-\ProvidesClass{baarticle}[2021/01/28 v0.2]
+\ProvidesClass{baarticle}[2021/05/03 v0.3]
 
 % Process package options
 \RequirePackage{xkeyval} % for key value processing
@@ -42,7 +42,7 @@
     \RequirePackage[english,main=ngerman]{babel}
     \RequirePackage[autostyle=true,german=quotes]{csquotes}
     \RequirePackage[style=baarticle]{biblatex}
-    \RequirePackage[nogroupskip,nonumberlist,nopostdot]{glossaries}
+    \RequirePackage[style=alttree,nogroupskip,nonumberlist,nopostdot,nolong,nosuper,nolist]{glossaries}
     \RequirePackage{hyperref}
 } {
     % not in simple, do nothing
@@ -65,6 +65,7 @@
 \newlength{\fignumspacing} % a "scratch" length
 \settowidth{\fignumspacing}{\bfseries\cftfigpresnum\cftfigaftersnum} % extra space
 \addtolength{\cftfignumwidth}{\fignumspacing} % add the extra space
+\setlength{\cftfigindent}{0pt}
 
 % List of Tables Style
 \renewcommand{\cfttabpresnum}{Tabelle }
@@ -72,6 +73,7 @@
 \newlength{\tabnumspacing} % a "scratch" length
 \settowidth{\tabnumspacing}{\bfseries\cfttabpresnum\cfttabaftersnum} % extra space
 \addtolength{\cfttabnumwidth}{\tabnumspacing} % add the extra space
+\setlength{\cfttabindent}{0pt}
 
 % List of Appendix (LoA)
 % The related commands will refer to 'appx' as the appendix command is already defined by LaTeX
@@ -285,6 +287,7 @@
     \presetkeys[BA]{simple}{type=undefined}{}
 
     % adjust glossary styling
+    \renewcommand{\glossarypreamble}{\glsfindwidesttoplevelname[\currentglossary]}
     \setacronymstyle{long-short}
     \renewcommand{\glossarysection}[2][]{}
     \makenoidxglossaries
@@ -312,9 +315,12 @@
             \clearpage
         }
         \mkfrontmatter{
+            \singlespacing
             \section*{Abkürzungsverzeichnis}
             \addcontentsline{toc}{section}{Abkürzungsverzeichnis}
+            \vspace{-1cm}
             \printnoidxglossaries
+            \onehalfspacing
         }
     }{
         \printbibliography[heading=bibintoc]
