@@ -1,11 +1,11 @@
 % Document class implementing the BA Dresden Styleguide
 \NeedsTeXFormat{LaTeX2e}[1995/12/01]
-\ProvidesClass{baarticle}[2021/05/03 v0.3]
+\ProvidesClass{baarticle}[2021/06/11 v0.4]
 
 % Process package options
 \RequirePackage{xkeyval} % for key value processing
 \RequirePackage{etoolbox} % for csdef, csundef, ifdefempty, toggles, etc ...
-\newtoggle{baclssimple} % toggle are false per default
+\newtoggle{baclssimple} % toggles are false per default
 
 % first name of the author
 \DeclareOptionX[BA]{first}{\def\@baclsfirst{#1}}
@@ -25,13 +25,18 @@
 \LoadClass[12pt]{article}
 
 % Load required packages
+\RequirePackage{iftex} % to check the TeX engine in use
+\ifpdftex
+    \RequirePackage[T1]{fontenc} % change the fontencoding so people can copy accented chararcters properly from the compiled document
+    \RequirePackage{lmodern} % swap the font so that the fontencoding change does not screw up letter kerning
+\fi
 \RequirePackage[a4paper,left=3cm,right=2cm,top=2cm,bottom=2cm]{geometry} % for paper size and page spacing
 \RequirePackage{setspace} % for line spacing
 \RequirePackage{float} % for H placement directive in \begin{figure}
 \RequirePackage{tocloft} % to adjust the ToC, LoF and LoT
 \RequirePackage{fancyhdr} % to adjust headers and footers
 \RequirePackage{graphicx} % to use includegraphics
-\RequirePackage[font={footnotesize}]{caption} % to make captions smaller
+\RequirePackage[font={footnotesize},justification=centering]{caption} % to make captions smaller and keep long captions centered
 \RequirePackage{wrapfig} % to place text wrapping floats
 \RequirePackage{tocbibind} % adds ToC entries for ToC, LoF, LoT, etc ...
 \RequirePackage[bottom,hang]{footmisc} % to keep footnotes always on the bottom and to fix multiline indentation
@@ -39,11 +44,12 @@
 
 % Load additional packages if in simple mode
 \iftoggle{baclssimple}{
+    \RequirePackage{pdfpages}
     \RequirePackage[english,main=ngerman]{babel}
     \RequirePackage[autostyle=true,german=quotes]{csquotes}
     \RequirePackage[style=baarticle]{biblatex}
-    \RequirePackage[style=alttree,nogroupskip,nonumberlist,nopostdot,nolong,nosuper,nolist]{glossaries}
     \RequirePackage{hyperref}
+    \RequirePackage[style=alttree,nogroupskip,nonumberlist,nopostdot,nolong,nosuper,nolist]{glossaries}
 } {
     % not in simple, do nothing
 }
@@ -284,7 +290,12 @@
     \define@key[BA]{simple}{location}{\def\@basimplelocation{#1}}
     % type of the paper (thesis etc...)
     \define@key[BA]{simple}{type}{\def\@basimpletype{#1}}
-    \presetkeys[BA]{simple}{type=undefined}{}
+    % path to thesis assignment (must be a pdf file)
+    \define@key[BA]{simple}{assignment}{\def\@basimpleassignment{#1}}
+    % whether to include the blocknotice or not
+    \define@boolkey[BA]{simple}{blocknotice}[true]{}
+
+    \presetkeys[BA]{simple}{type=undefined,blocknotice=true}{}
 
     % adjust glossary styling
     \renewcommand{\glossarypreamble}{\glsfindwidesttoplevelname[\currentglossary]}
@@ -304,11 +315,18 @@
             returndate=\@basimplereturndate,
             type=\@basimpletype,
         }
-        \mkblocknotice{
-            signature=\@basimplesignature,
-            date=\@basimplereturndate,
-            location=\@basimplelocation
+        \ifdefvoid{\@basimpleassignment}{
+            % no assignment file set, do nothing
+        }{
+            \includepdf[pages={1}]{\@basimpleassignment}
         }
+        \ifBA@simple@blocknotice
+            \mkblocknotice{
+                signature=\@basimplesignature,
+                date=\@basimplereturndate,
+                location=\@basimplelocation
+            }
+        \fi
         \ifdefvoid{\basimpleabstract}{}{
             \section*{Abstract}
             \basimpleabstract
