@@ -1,4 +1,4 @@
-Dieses Repo wird jetzt von Maximilian Uhlemann weitergeführt. Ihr findet das neue Repo hier: [ba-latex-template](https://github.com/Malonsow/ba-latex-template-overleaf)
+Dieses Repo wird jetzt von Malonsow weitergeführt. Ihr findet das neue Repo hier: [ba-latex-template](https://github.com/Malonsow/ba-latex-template-overleaf)
 
 Dieses Repo verbleibt auf v0.4.
 
